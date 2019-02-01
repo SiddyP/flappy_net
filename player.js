@@ -6,8 +6,8 @@ class Player {
         this.velX = velX
         this.size = 15
         this.fitness = 0
-        this.actions_taken = [];
         this.model = model
+        this.score = 0
     }
 
     show() {
@@ -17,15 +17,24 @@ class Player {
     }
 
     distance(pipe) {
-        let x_dist = pipe.x_b - this.x
+        let x_dist = this.x - pipe.x_b 
         let y_dist_bottom = (pipe.y_b - pipe.height_b) - this.y
         let y_dist_top = this.y - (pipe.y_t + pipe.height_t)
-        return [x_dist, y_dist_bottom, y_dist_top]
+        return [x_dist / 1000, y_dist_bottom / pipe.height_b, y_dist_top / pipe.height_t, this.y / 1000]
     }
 
     flap(){
         this.velY -= 10
     }
+
+    model_action(pipe){
+        let input = tf.tensor([this.distance(pipe)])
+        let output = this.model.predict(input).dataSync()
+        if (output > 0.5){
+            this.velY -= 10
+        } 
+    }
+
 
     random_action(){
         let p = Math.random()
@@ -39,16 +48,12 @@ class Player {
         }
     }
 
-    model_action(model, inpt){
-        return model.predict(inpt)
-    }
-
 
     update(){
         this.velY += gravity;
         this.y += this.velY;
         this.x += this.velX;
-        this.fitness += 0.01
+        this.score += 0.01
 
         //Manual override
         if (keyIsDown(UP_ARROW)){
