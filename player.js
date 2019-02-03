@@ -1,26 +1,30 @@
 class Player {
-    constructor(x, y, velX, model) {
+    constructor(x, y, fitness, model, generationColor, anscestors) {
         this.x = x;
         this.y = y;
         this.velY = 0
-        this.velX = velX
         this.size = 15
-        this.fitness = 0
         this.model = model
         this.score = 0
+        this.fitness = fitness
+        this.proba = []
+        this.generationColor = generationColor
+        this.anscestors = anscestors
     }
 
     show() {
         noStroke();
-        fill(255,255,0);
+        fill(this.generationColor,255, 70);
         ellipse(this.x,this.y,this.size);
     }
 
+    //map(value, start1, stop1, start2, stop2, [withinBounds])
     distance(pipe) {
-        let x_dist = this.x - pipe.x_b 
-        let y_dist_bottom = (pipe.y_b - pipe.height_b) - this.y
-        let y_dist_top = this.y - (pipe.y_t + pipe.height_t)
-        return [x_dist / 1000, y_dist_bottom / pipe.height_b, y_dist_top / pipe.height_t, this.y / 1000]
+        let x_dist = map(pipe.x_b - pipe.width/2, this.x, game_width, 0, 1)
+        let y_dist_bottom = map((pipe.y_b - pipe.height_b) - this.y, 0, game_height, 0, 1) 
+        let y_dist_top = map(this.y - (pipe.y_t + pipe.height_t), 0, game_height, 0, 1)
+        let y_bird = map(this.y, 0, game_height, 0, 1)
+        return [x_dist, y_dist_bottom, y_dist_top, y_bird]
     }
 
     flap(){
@@ -30,8 +34,10 @@ class Player {
     model_action(pipe){
         let input = tf.tensor([this.distance(pipe)])
         let output = this.model.predict(input).dataSync()
-        if (output > 0.5){
-            this.velY -= 10
+        let mapped_out = map(output[0], -1.1, 1.1, 0, 1)
+        //console.log(mapped_out)
+        if (mapped_out > 0.5){
+            this.velY -= 6
         } 
     }
 
@@ -52,8 +58,7 @@ class Player {
     update(){
         this.velY += gravity;
         this.y += this.velY;
-        this.x += this.velX;
-        this.score += 0.01
+        this.score += 1
 
         //Manual override
         if (keyIsDown(UP_ARROW)){
@@ -71,12 +76,6 @@ class Player {
             this.velY = 10
         }
 
-        //Boundaries 
-        if (this. y < 10) {
-            this.y = 10
-        } else if (this.y > 990){
-            this.y = 990
-        }
     }
 
 }

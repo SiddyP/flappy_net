@@ -1,5 +1,6 @@
 function generate_model(random, weights){
     if (random == 1){
+        //console.log('Creating NEW offspring')
         const model = tf.sequential();
         // First layer must have an input shape defined.
         model.add(tf.layers.dense({units: 2, inputShape: [4]}));
@@ -8,6 +9,7 @@ function generate_model(random, weights){
         model.add(tf.layers.dense({units: 1}));
         return model
     } else {
+        //console.log('Creating BRED offspring')
         const model = tf.sequential();
         // First layer must have an input shape defined.
         model.add(tf.layers.dense({units: 2, inputShape: [4], weights: [tf.tensor(weights[0], [4,2]), tf.tensor([0,0])]}));

@@ -5,8 +5,9 @@ class Pipe {
         this.x_t = x_t;
         this.y_t = y_t;
         this.width = width
-        this.height_b = Math.floor(Math.random() * Math.floor(300)) + 170
-        this.height_t = Math.floor(Math.random() * Math.floor(300)) + 170
+        this.gap = 200
+        this.height_b = Math.floor(Math.random() * Math.floor(150)) + 70
+        this.height_t = game_height - this.gap -this.height_b
         this.velX = velX
     }
 
@@ -24,6 +25,9 @@ class Pipe {
     }
 
     colided(p) {
+        if  (p.y > game_height || p.y < 0) {
+            return true
+        }
         if (p.x + p.size / 2 > this.x_b && p.x - p.size / 2 < this.x_b + this.width ) {
             if (p.y - p.size / 2 < this.height_t || p.y + p.size / 2 > this.y_b - this.height_b) {
                 return true
