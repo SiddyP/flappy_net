@@ -25,6 +25,7 @@ function compareDicts(a, b) {
     return 0
 }
 
+
 function get_total_score(birds) {
     let total_accuracy = 0
     for (let i = 0; i < birds.length; i++) {
@@ -60,7 +61,7 @@ function setup() {
 // Create intital population, if we have breed only 
 function create_players(new_population, kept_population) {
     for (let i = 0; i < new_population; i++) {
-        bird_arr.push(new Player(50, game_height / 2, 0, generate_model(1, 0), 0))
+        bird_arr.push(new Player(50, game_height / 2, 0, 'brain', 0))
     }
     if (kept_population.length > 0) {
         for (let j = 0; j < kept_population.length; j++) {
@@ -69,7 +70,7 @@ function create_players(new_population, kept_population) {
     }
 }
 
-let tot_pop = 200
+let tot_pop = 500
 
 create_players(tot_pop, [])
 
@@ -93,7 +94,6 @@ for (let t = 0; t < slider.value(); t++) {
     current_score_html.html(current_score)
 
     for (let k = 0; k < bird_arr.length; k++) {
-        //bird_arr[k].show()
         bird_arr[k].update()
         
 
@@ -103,9 +103,8 @@ for (let t = 0; t < slider.value(); t++) {
 
         if (pipe_arr.length > 0) {
             gravity = 0.35
-            if (draw_counter % 1 == 0){
+            if (draw_counter % 10 == 0){
                 let inpt = pipe_arr[0]
-                //console.log(bird_arr[k].distance(inpt))
                 if (inpt[0] < 0) {
                     inpt = pipe_arr[1]
                 }
@@ -127,35 +126,13 @@ for (let t = 0; t < slider.value(); t++) {
 
     //Update pipe rendering every step of the draw loop
     for (let i = 0; i < pipe_arr.length; i++) {
-        //pipe_arr[i].show()
         pipe_arr[i].update()
     }
 
     if(bird_arr.length == 0){
         gravity = 0
-        console.log('All birds dead, evolving ...')
+
         for (let i = 0; i < dead_bird_arr.length; i++) {
-            console.log('Bird generation:')
-            console.log(dead_bird_arr[i].generation)
-            
-        }
-        console.log('Generation: ' + String(generations))
-
-        // let total_score = get_total_score(dead_bird_arr)
-
-        let weights = [];
-        for (let i = 0; i < dead_bird_arr.length; i++) {
-            //console.log(dead_bird_arr[i].proba)
-            // Store weights
-            let w = dead_bird_arr[i].model.getWeights()
-            weights.push(w)
-            console.log('generation: '+ String(dead_bird_arr[i].generation))
-            console.log('score: ' + String(dead_bird_arr[i].score))
-            
-
-            // Normalize score
-            //dead_bird_arr[i].score = dead_bird_arr[i].score/total_score
-
             if (dead_bird_arr[i].score > top_score){
                 top_score = dead_bird_arr[i].score
                 top_score_html.html(top_score)
@@ -182,43 +159,20 @@ for (let t = 0; t < slider.value(); t++) {
         // brds = generate(dead_bird_arr)
         // console.log(brds)
 
+        normalizeFitness(dead_bird_arr);
+        console.log(dead_bird_arr)
+        bird_arr = generate(dead_bird_arr);
+        dead_bird_arr = bird_arr.slice();
+        console.log(bird_arr)
+        console.log(dead_bird_arr)
+
         
+        // let kept_birds = []
+        // for (let i = 0; i < 100; i++) {
+        //     let kept_brain = dead_bird_arr[dead_bird_arr.length-1-i].model
+        //     let kept_bird = new Player(50, game_height / 2, 0, kept_brain, 0)
+        //     kept_birds.push(kept_bird)
 
-
-        let kept_birds = []
-        for (let i = 0; i < 7; i++) {
-            // Pocket top 3
-            if (i < 3) {
-            let child_genes_t3 = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1 - i], dead_bird_arr[dead_bird_arr.length - 1 - i])
-            let child_bird_t3 = new Player(50, game_height / 2, 0, generate_model(2, child_genes_t3), dead_bird_arr[dead_bird_arr.length - 1].generation += 1)
-            kept_birds.push(child_bird_t3)
-            }
-
-            //Copy top ten
-            if (i < 10) {
-                kept_birds.push(dead_bird_arr[dead_bird_arr.length - 1 - i])
-            }
-
-            // Let best bird father 5 children 
-            let child_genes = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1], dead_bird_arr[dead_bird_arr.length - 2-i])
-            let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), 0)
-            kept_birds.push(child_bird)
-
-            if (i < 3) {
-                let child_genes = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 2], dead_bird_arr[dead_bird_arr.length - 3 - i])
-                let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), 0)
-                kept_birds.push(child_bird)
-            }
-
-            // Also keep some random individuals ? 
-            //kept_birds.push(dead_bird_arr[dead_bird_arr.length-1-i])       
-        }
-        console.log('Kept birds: ' + String(kept_birds.length))
-        create_players(tot_pop-kept_birds.length, kept_birds)
-
-
-        // Reset dead_bird_arr 
-        dead_bird_arr = []
     }
 }
     // Render game

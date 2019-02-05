@@ -1,3 +1,13 @@
+function mutate(x) {
+    if (random(1) < 0.1) {
+        let offset = randomGaussian() * 0.5;
+        let newx = x + offset;
+        return newx;
+    } else {
+        return x;
+    }
+}
+
 class Player {
     constructor(x, y, fitness, model, generation, anscestors) {
         this.x = x;
@@ -7,9 +17,15 @@ class Player {
         this.model = model
         this.score = 0
         this.fitness = fitness
-        this.proba = []
         this.generation = generation
         this.anscestors = anscestors
+
+        if (model instanceof NeuralNetwork) {
+            this.model = model.copy();
+            this.model.mutate(mutate);
+        } else {
+            this.model = new NeuralNetwork(5,8,2)
+        }
     }
 
     show() {
@@ -24,7 +40,8 @@ class Player {
         let y_dist_bottom = map((pipe.y_b - pipe.height_b) - this.y, 0, game_height, 0, 1) 
         let y_dist_top = map(this.y - (pipe.y_t + pipe.height_t), 0, game_height, 0, 1)
         let y_bird = map(this.y, 0, game_height, 0, 1)
-        return [x_dist, y_dist_bottom, y_dist_top, y_bird]
+        let yvel = map(this.velY, 0, game_height, 0, 1)
+        return [x_dist, y_dist_bottom, y_dist_top, y_bird, yvel]
     }
 
     flap(){
@@ -32,8 +49,8 @@ class Player {
     }
 
     model_action(pipe){
-        let input = tf.tensor([this.distance(pipe)])
-        let output = this.model.predict(input).dataSync()
+        let input = this.distance(pipe)
+        let output = this.model.predict(input)
         
         //console.log(mapped_out)
         if (output[1] > output[0]){

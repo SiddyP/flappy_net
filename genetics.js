@@ -66,21 +66,57 @@ function evolveFatherMother(father, mother){
 }
 
 
-function normFitness(birds){
-    for (let i = 0; i < birds.length; i++) {
-        birds[i].score = Math.pow(birds[i].score, 2);
+// Start the game over
+function resetGame() {
+    counter = 0;
+    // Resetting best bird score to 0
+    if (bestBird) {
+        bestBird.score = 0;
     }
-    let sum = 0
+    pipes = [];
+}
+
+// Create the next generation
+function nextGeneration() {
+    resetGame();
+    // Normalize the fitness values 0-1
+    normalizeFitness(allBirds);
+    // Generate a new set of birds
+    activeBirds = generate(allBirds);
+    // Copy those birds to another array
+    allBirds = activeBirds.slice();
+}
+
+// Generate a new population of birds
+function generate(oldBirds) {
+    let newBirds = [];
+    for (let i = 0; i < oldBirds.length; i++) {
+        // Select a bird based on fitness
+        let bird = poolSelection(oldBirds);
+        newBirds[i] = bird;
+    }
+    console.log('Birds from pool: ' + String(newBirds.length))
+    return newBirds;
+}
+
+// Normalize the fitness of all birds
+function normalizeFitness(birds) {
+    // Make score exponentially better?
     for (let i = 0; i < birds.length; i++) {
-        sum += birds[i].score    
+        birds[i].score = pow(birds[i].score, 2);
     }
 
+    // Add up all the scores
+    let sum = 0;
     for (let i = 0; i < birds.length; i++) {
-        birds[i].fitness = birds[i].score/sum
+        sum += birds[i].score;
+    }
+    // Divide by the sum
+    for (let i = 0; i < birds.length; i++) {
+        birds[i].fitness = birds[i].score / sum;
     }
 }
 
-//BORROWED //
 
 // An algorithm for picking one bird from an array
 // based on fitness
@@ -105,17 +141,6 @@ function poolSelection(birds) {
 
     // Make sure it's a copy!
     // (this includes mutation)
-    //return birds[index].copy();
-    return birds[index];
-}
-
-// Generate a new population of birds
-function generate(oldBirds) {
-    let newBirds = [];
-    for (let i = 0; i < oldBirds.length; i++) {
-        // Select a bird based on fitness
-        let bird = poolSelection(oldBirds);
-        newBirds[i] = bird;
-    }
-    return newBirds;
+    let brd = birds[index]
+    return brd
 }
