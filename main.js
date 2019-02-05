@@ -103,7 +103,7 @@ for (let t = 0; t < slider.value(); t++) {
 
         if (pipe_arr.length > 0) {
             gravity = 0.35
-            if (draw_counter % 10 == 0){
+            if (draw_counter % 1 == 0){
                 let inpt = pipe_arr[0]
                 //console.log(bird_arr[k].distance(inpt))
                 if (inpt[0] < 0) {
@@ -134,6 +134,11 @@ for (let t = 0; t < slider.value(); t++) {
     if(bird_arr.length == 0){
         gravity = 0
         console.log('All birds dead, evolving ...')
+        for (let i = 0; i < dead_bird_arr.length; i++) {
+            console.log('Bird generation:')
+            console.log(dead_bird_arr[i].generation)
+            
+        }
         console.log('Generation: ' + String(generations))
 
         // let total_score = get_total_score(dead_bird_arr)
@@ -144,7 +149,9 @@ for (let t = 0; t < slider.value(); t++) {
             // Store weights
             let w = dead_bird_arr[i].model.getWeights()
             weights.push(w)
-            console.log('Redness: '+ String(dead_bird_arr[i].generationColor))
+            console.log('generation: '+ String(dead_bird_arr[i].generation))
+            console.log('score: ' + String(dead_bird_arr[i].score))
+            
 
             // Normalize score
             //dead_bird_arr[i].score = dead_bird_arr[i].score/total_score
@@ -168,18 +175,33 @@ for (let t = 0; t < slider.value(); t++) {
         // but father / mother should not be the same (only results in random mutation)
 
         // Try implementing carrying fitness score through generations?
+
+        // normFitness(dead_bird_arr)
+        // console.log(dead_bird_arr)
+        // let brds = []
+        // brds = generate(dead_bird_arr)
+        // console.log(brds)
+
+        
+
+
         let kept_birds = []
         for (let i = 0; i < 7; i++) {
             // Pocket top 3
             if (i < 3) {
             let child_genes_t3 = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1 - i], dead_bird_arr[dead_bird_arr.length - 1 - i])
-            let child_bird_t3 = new Player(50, game_height / 2, 0, generate_model(2, child_genes_t3), dead_bird_arr[dead_bird_arr.length - 1].generationColor += 1)
+            let child_bird_t3 = new Player(50, game_height / 2, 0, generate_model(2, child_genes_t3), dead_bird_arr[dead_bird_arr.length - 1].generation += 1)
             kept_birds.push(child_bird_t3)
+            }
+
+            //Copy top ten
+            if (i < 10) {
+                kept_birds.push(dead_bird_arr[dead_bird_arr.length - 1 - i])
             }
 
             // Let best bird father 5 children 
             let child_genes = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1], dead_bird_arr[dead_bird_arr.length - 2-i])
-            let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), dead_bird_arr[dead_bird_arr.length - 1].generationColor += 1)
+            let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), 0)
             kept_birds.push(child_bird)
 
             if (i < 3) {
@@ -191,6 +213,7 @@ for (let t = 0; t < slider.value(); t++) {
             // Also keep some random individuals ? 
             //kept_birds.push(dead_bird_arr[dead_bird_arr.length-1-i])       
         }
+        console.log('Kept birds: ' + String(kept_birds.length))
         create_players(tot_pop-kept_birds.length, kept_birds)
 
 

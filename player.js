@@ -1,5 +1,5 @@
 class Player {
-    constructor(x, y, fitness, model, generationColor, anscestors) {
+    constructor(x, y, fitness, model, generation, anscestors) {
         this.x = x;
         this.y = y;
         this.velY = 0
@@ -8,13 +8,13 @@ class Player {
         this.score = 0
         this.fitness = fitness
         this.proba = []
-        this.generationColor = generationColor
+        this.generation = generation
         this.anscestors = anscestors
     }
 
     show() {
         noStroke();
-        fill(this.generationColor,255, 70);
+        fill(this.generation,255, 70);
         ellipse(this.x,this.y,this.size);
     }
 
@@ -34,9 +34,9 @@ class Player {
     model_action(pipe){
         let input = tf.tensor([this.distance(pipe)])
         let output = this.model.predict(input).dataSync()
-        let mapped_out = map(output[0], -1.1, 1.1, 0, 1)
+        
         //console.log(mapped_out)
-        if (mapped_out > 0.5){
+        if (output[1] > output[0]){
             this.velY -= 6
         } 
     }
