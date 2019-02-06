@@ -186,7 +186,7 @@ for (let t = 0; t < slider.value(); t++) {
 
 
         let kept_birds = []
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 25; i++) {
             // Pocket top 3
             if (i < 3) {
             let child_genes_t3 = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1 - i], dead_bird_arr[dead_bird_arr.length - 1 - i])
