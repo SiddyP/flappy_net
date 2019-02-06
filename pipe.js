@@ -5,8 +5,8 @@ class Pipe {
         this.x_t = x_t;
         this.y_t = y_t;
         this.width = width
-        this.gap = 100
-        this.height_b = Math.floor(Math.random() * Math.floor(150)) + 70
+        this.gap = 120
+        this.height_b = Math.floor(Math.random() * Math.floor(300)) + 70
         this.height_t = game_height - this.gap -this.height_b
         this.velX = velX
     }

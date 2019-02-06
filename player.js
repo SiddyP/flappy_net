@@ -1,20 +1,17 @@
 class Player {
-    constructor(x, y, fitness, model, generation, anscestors) {
-        this.x = x;
-        this.y = y;
+    constructor(model) {
+        this.x = 50;
+        this.y = game_height/2;
         this.velY = 0
         this.size = 15
         this.model = model
         this.score = 0
-        this.fitness = fitness
-        this.proba = []
-        this.generation = generation
-        this.anscestors = anscestors
+        this.evolved = 0
     }
 
     show() {
         noStroke();
-        fill(255, 255, 0);
+        fill(255 - this.evolved, 255 - this.evolved, 0 + this.evolved);
         ellipse(this.x,this.y,this.size);
     }
 
@@ -32,17 +29,13 @@ class Player {
         this.velY -= 10
     }
 
-    model_action(pipe){
-        //console.log(this.distance(pipe))
+    player_action(pipe){
         let input = tf.tensor([this.distance(pipe)])
         let output = this.model.predict(input).dataSync()
-        
-        //console.log(mapped_out)
         if (output[1] > output[0]){
             this.velY -= 12
         } 
     }
-
 
     random_action(){
         let p = Math.random()
@@ -74,8 +67,8 @@ class Player {
         }
 
         //Max speed
-        if (this.velY > 10) {
-            this.velY = 10
+        if (this.velY > 12) {
+            this.velY = 12
         }
 
     }
