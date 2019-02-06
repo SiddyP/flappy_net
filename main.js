@@ -69,7 +69,7 @@ function create_players(new_population, kept_population) {
     }
 }
 
-let tot_pop = 200
+let tot_pop = 50
 
 create_players(tot_pop, [])
 
@@ -186,29 +186,28 @@ for (let t = 0; t < slider.value(); t++) {
 
 
         let kept_birds = []
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 40; i++) {
             // Pocket top 3
-            if (i < 3) {
-            let child_genes_t3 = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1 - i], dead_bird_arr[dead_bird_arr.length - 1 - i])
+            let child_genes_t3 = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1], dead_bird_arr[dead_bird_arr.length - 1])
             let child_bird_t3 = new Player(50, game_height / 2, 0, generate_model(2, child_genes_t3), dead_bird_arr[dead_bird_arr.length - 1].generation += 1)
             kept_birds.push(child_bird_t3)
-            }
+    
 
-            //Copy top ten
-            if (i < 10) {
-                kept_birds.push(dead_bird_arr[dead_bird_arr.length - 1 - i])
-            }
+            // //Copy top ten
+            // if (i < 10) {
+            //     kept_birds.push(dead_bird_arr[dead_bird_arr.length - 1 - i])
+            // }
 
             // Let best bird father 5 children 
-            let child_genes = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1], dead_bird_arr[dead_bird_arr.length - 2-i])
-            let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), 0)
-            kept_birds.push(child_bird)
+            // let child_genes = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 1], dead_bird_arr[dead_bird_arr.length - 2-i])
+            // let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), 0)
+            // kept_birds.push(child_bird)
 
-            if (i < 3) {
-                let child_genes = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 2], dead_bird_arr[dead_bird_arr.length - 3 - i])
-                let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), 0)
-                kept_birds.push(child_bird)
-            }
+            // if (i < 3) {
+            //     let child_genes = evolveFatherMother(dead_bird_arr[dead_bird_arr.length - 2], dead_bird_arr[dead_bird_arr.length - 3 - i])
+            //     let child_bird = new Player(50, game_height / 2, 0, generate_model(2, child_genes), 0)
+            //     kept_birds.push(child_bird)
+            // }
 
             // Also keep some random individuals ? 
             //kept_birds.push(dead_bird_arr[dead_bird_arr.length-1-i])       

@@ -14,7 +14,7 @@ class Player {
 
     show() {
         noStroke();
-        fill(this.generation,255, 70);
+        fill(255, 255, 0);
         ellipse(this.x,this.y,this.size);
     }
 
@@ -24,7 +24,8 @@ class Player {
         let y_dist_bottom = map((pipe.y_b - pipe.height_b) - this.y, 0, game_height, 0, 1) 
         let y_dist_top = map(this.y - (pipe.y_t + pipe.height_t), 0, game_height, 0, 1)
         let y_bird = map(this.y, 0, game_height, 0, 1)
-        return [x_dist, y_dist_bottom, y_dist_top, y_bird]
+        let yvel = map(this.velY, 0, 20, 0, 1)
+        return [x_dist, y_dist_bottom, y_dist_top, y_bird, yvel]
     }
 
     flap(){
@@ -32,6 +33,7 @@ class Player {
     }
 
     model_action(pipe){
+        //console.log(this.distance(pipe))
         let input = tf.tensor([this.distance(pipe)])
         let output = this.model.predict(input).dataSync()
         
