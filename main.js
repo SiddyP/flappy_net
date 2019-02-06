@@ -69,7 +69,7 @@ function create_players(new_population, kept_population) {
     }
 }
 
-let tot_pop = 50
+let tot_pop = 200
 
 create_players(tot_pop, [])
 
@@ -87,7 +87,7 @@ birds_html.html(bird_arr.length)
 for (let t = 0; t < slider.value(); t++) {
         
     if (draw_counter % 100 == 0) {
-        pipe_arr.push(new Pipe(game_width, game_height, game_width, 0, 75, 4))
+        pipe_arr.push(new Pipe(game_width, game_height, game_width, 0, 55, 4))
     }
     current_score = bird_arr[0].score
     current_score_html.html(current_score)
