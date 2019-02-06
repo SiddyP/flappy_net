@@ -1,21 +1,29 @@
-from p5 import *
+import glfw
 
-def setup():
-    size(640, 360)
-    no_stroke()
-    background(204)
+def main():
+    # Initialize the library
+    if not glfw.init():
+        return
+    # Create a windowed mode window and its OpenGL context
+    window = glfw.create_window(640, 480, "Hello World", None, None)
+    if not window:
+        glfw.terminate()
+        return
 
-def draw():
-    if mouse_is_pressed:
-        fill(random_uniform(255), random_uniform(127), random_uniform(51), 127)
-    else:
-        fill(255, 15)
+    # Make the window's context current
+    glfw.make_context_current(window)
 
-    circle_size = random_uniform(low=10, high=80)
+    # Loop until the user closes the window
+    while not glfw.window_should_close(window):
+        # Render here, e.g. using pyOpenGL
 
-    circle((mouse_x, mouse_y), circle_size)
+        # Swap front and back buffers
+        glfw.swap_buffers(window)
 
-def key_pressed(event):
-    background(204)
+        # Poll for and process events
+        glfw.poll_events()
 
-run()
+    glfw.terminate()
+
+if __name__ == "__main__":
+    main()

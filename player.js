@@ -39,7 +39,7 @@ class Player {
         
         //console.log(mapped_out)
         if (output[1] > output[0]){
-            this.velY -= 14
+            this.velY -= 12
         } 
     }
 
