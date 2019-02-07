@@ -50,7 +50,7 @@ function create_players(new_population, kept_population) {
     }
 }
 
-let total_populaton = 50
+let total_populaton = 200
 
 create_players(total_populaton, [])
 
